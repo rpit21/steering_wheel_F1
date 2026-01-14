@@ -1,0 +1,68 @@
+# ================================
+# S32 Design Studio - Ignore Files
+# ================================
+
+# Build / Output directories
+Debug*/
+Release*/
+**/output*/
+**/build*/
+
+# Compiler / temp
+*.elf
+*.map
+*.out
+*.o
+*.d
+*.lst
+*.bin
+*.hex
+*.su
+
+# IDE metadata
+*.launch
+*.settings/
+**/.metadata/
+**/.cache/
+**/.gdbinit
+**/.log
+
+# Backups
+*~
+*.bak
+*.tmp
+
+# Python junk
+__pycache__/
+*.pyc
+
+# CSV test files
+sim/test/*.csv
+
+# ===================================
+# Development environment & editor
+# ===================================
+
+# Python virtual environment
+.venv/
+venv/
+
+# VSCode settings
+.vscode/
+
+# JetBrains
+.idea/
+
+# ===================================
+# OS-specific ignores
+# ===================================
+
+# Windows
+Thumbs.db
+Desktop.ini
+
+# macOS
+.DS_Store
+
+# Linux
+.nfs*

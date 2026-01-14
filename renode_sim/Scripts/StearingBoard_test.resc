@@ -1,0 +1,27 @@
+:name: s32k118
+:description: This script runs Steering Board demo on s32k118
+
+using sysbus
+
+:Creation of Machine 
+mach create "s32k118_Board"
+machine LoadPlatformDescription @renode_sim/Board/s32k118_Board.repl
+
+:Open an analyzer for the uart port
+:showAnalyzer sysbus.lpuart0
+
+:Put the location of the BinaryShell 
+$bin?=@renode_sim/Binary/blink_led.elf
+
+
+:Creation of Macros every time I request the macro it executes and load the code
+macro reset
+"""
+    sysbus LoadELF $bin
+"""
+runMacro $reset
+
+:logLevel -1 portB.LED1
+
+:start the GDB server on port 3333 
+machine StartGdbServer 3333

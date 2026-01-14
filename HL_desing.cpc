@@ -1,0 +1,67 @@
+// Analog Input
+// Read signal of the Clutch in an A/D pin
+analogInputClutch = ReadAnalogPin(ClutchPin)
+
+// Read position of the Rotary switch in another A/D pin
+analogInputRotarySwitch = ReadAnalogPin(RotarySwitchPin)
+
+// Process signals
+processedClutchSignal = ProcessSignal(analogInputClutch)
+processedRotarySignal = ProcessSignal(analogInputRotarySwitch)
+
+// Deliver to the display
+DisplayAnalogSignals(processedClutchSignal, processedRotarySignal)
+
+// Digital Input
+// Read each Button in different digital pins
+button1State = ReadDigitalPin(Button1Pin)
+button2State = ReadDigitalPin(Button2Pin)
+button3State = ReadDigitalPin(Button3Pin)
+button4State = ReadDigitalPin(Button4Pin)
+
+// Fix Electromechanical Bouncing
+button1State = Debounce(button1State)
+button2State = Debounce(button2State)
+button3State = Debounce(button3State)
+button4State = Debounce(button4State)
+
+// Define different function for each button
+HandleButton1(button1State)
+HandleButton2(button2State)
+HandleButton3(button3State)
+HandleButton4(button4State)
+
+// Deliver their state to the display (or other devices)
+DisplayButtonStates(button1State, button2State, button3State, button4State)
+
+// CAN/CANFD
+// Read the message/frame
+canMessage = ReadCANMessage()
+
+// Deliver the information to the display
+DisplayCANMessage(canMessage)
+
+// Management Communication
+// Display
+// Make Different Pages
+CreateDisplayPage("Temperature")
+CreateDisplayPage("Button States")
+CreateDisplayPage("Clutch Messages")
+
+// Show Value of the temperature
+temperature = GetTemperature()
+DisplayTemperature(temperature)
+
+// Show messages of Buttons
+DisplayButtonMessages(button1State, button2State, button3State, button4State)
+
+// Show messages of the Clutch
+DisplayClutchMessages(processedClutchSignal)
+
+// Define Interface
+// Should be off when it is in standby
+if (IsStandbyMode()) {
+    TurnOffDisplay()
+} else {
+    TurnOnDisplay()
+}

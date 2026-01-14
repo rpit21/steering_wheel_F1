@@ -1,0 +1,21 @@
+using "platforms/cpus/s32k118.repl"
+
+
+
+Button1: Miscellaneous.Button @ portA
+    -> portA@0
+
+Button2: Miscellaneous.Button @ portA
+    -> portA@1
+    
+Button3: Miscellaneous.Button @ portA
+    -> portA@2
+
+Button4: Miscellaneous.Button @ portA
+    -> portA@3
+
+
+
+LED1: Miscellaneous.LED @ portB
+portB:
+    1 -> LED1@0
