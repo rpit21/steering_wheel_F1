@@ -1,0 +1,100 @@
+---------------check list before flash------------------
+-Am I ussing connect_assert_srst?
+
+-Am I not using fopt?
+
+-Is the watchdog disable on my code?
+
+-Is the Adapter speed ≤ 200 kHz?
+
+-Is the MCU answering to a reset halt?
+
+If all yes we are secure
+
+----------------FLASH-----------------------------------
+1. This comand I always have to use:
+
+openocd.exe -f interface/cmsis-dap.cfg -f target/s32k.cfg -c "transport select swd; adapter speed 200; reset_config srst_only srst_nogate connect_assert_srst; init; reset halt; program SW_S32K118.elf verify reset exit"
+
+openocd.exe -f interface/cmsis-dap.cfg -f target/s32k.cfg -c "transport select swd; adapter speed 200; reset_config srst_only srst_nogate connect_assert_srst; init; reset halt; program SW_S32K118.elf  reset exit"
+
+
+2. If not reset and not halt:
+
+openocd.exe -f interface/cmsis-dap.cfg -f target/s32k.cfg -c "transport select swd; adapter speed 100; reset_config srst_only srst_nogate; init; reset halt; program SW_S32K118.elf verify reset exit"
+
+3. If problem with program but we are in halt:
+
+openocd.exe -f interface/cmsis-dap.cfg -f target/s32k.cfg -c "transport select swd; adapter speed 200; reset_config srst_only srst_nogate connect_assert_srst; init; reset halt; flash erase_address 0x00000000 0x00080000; shutdown"
+
+and go againg with programar comando principal.
+
+4. If Openocd issues with register:
+openocd.exe -f interface/cmsis-dap.cfg -f target/s32k.cfg -c "transport select swd; adapter speed 50; reset_config srst_only srst_nogate connect_assert_srst;
+init; sleep 200; reset halt; program SW_S32K118.elf verify reset exit"
+
+5. Pure debug to see if the mcu connects
+openocd.exe -f interface/cmsis-dap.cfg -f target/s32k.cfg -c "transport select swd; adapter speed 100; init; reset halt"
+
+6. Final option to "safe"
+openocd.exe -f interface/cmsis-dap.cfg -f target/s32k.cfg -c "transport select swd; adapter speed 100; reset_config srst_only srst_nogate connect_assert_srst; init; kinetis mdm mass_erase; shutdown"
+
+
+(7). In case of verificartion of the reset:
+openocd -f interface/cmsis-dap.cfg -f target/s32k.cfg  -c "transport select swd; adapter speed 100; init; adapter_assert_srst; sleep 500; adapter_deassert_srst; shutdown"
+
+the voltage on rst has to be 0V
+ 
+8. On EXTREME SITUATIONS USE THIS:
+
+openocd.exe -f interface/cmsis-dap.cfg -f target/s32k.cfg -c "init;  kinetis fopt 0x7f; kinetis disable_wdog; kinetis mdm mass_erase; reset halt; program C:/Users/giuse/workspaceS32DS.3.6.3/SW_S32K118/Debug_FLASH/SW_S32K118.elf verify reset exit"
+
+---------------DEBUG-------------------------------------
+openocd.exe -f interface/cmsis-dap.cfg -f target/s32k.cfg
+
+1. Open a server for debug GDB server 3333 
+openocd -f interface/cmsis-dap.cfg -f target/s32k.cfg  -c "transport select swd;  adapter speed 200;  reset_config srst_only srst_nogate connect_assert_srst;  init; reset halt"
+
+
+2. Conect to telnet or putty
+2.1 Telnet commands
+
+telnet localhost 4444
+halt (stop MCU)
+resume (like run)
+reset halt (rest + halt)
+reset run (rest+execution)
+
+reg (show all the registers)
+reg pc (verify where is executing)
+
+bp main (brake point on main)
+rbp all (remove all the brake points)
+
+2.2 GDB server S32ds
+
+--------------------WORK FLOW------------------------
+1. Flash with openocd
+2. Start the openocd debug
+3. Connect openocd with s32ds pressind debug (this has to have:  [x]Halt, []Load image, [x]Load symbols)
+4. Use brakepoints, step over, step into, check clocks and LPIT, but not directly run
+5. If it freeze use on telnet (reset halt)
+
+
+--------------Can Test-----------------------------------
+Once you flashed and you are conect with an USB-to-CAN device on an Linux-Ubuntu enviroment flasheas:
+
+ip link / ip addr
+
+sudo ip link set can0 down
+
+sudo ip link set can0 type can bitrate 500000 restart-ms 100
+
+sudo ip link set can0 up
+
+ip -details link show can0
+
+candump can0
+
+if it works and I saw my message is the Next I  can open 
+python3 ecu_sim.py
