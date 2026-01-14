@@ -9,16 +9,6 @@ The **F1 Steering Wheel** project focuses on designing and developing the firmwa
 
 It also includes a **PC-based simulator** for early-stage testing using **SDL2** (for graphics) and **SocketCAN** (for CAN bus communication).
 
-## 🎯 Project Overview
-The goal of this project is to design and build the electronic board and firmware for a Formula 1 style steering wheel. This simulator allows for the development and testing of the firmware logic on a host PC before deploying it to the target hardware (NXP S32K).
-
-The steering wheel needs to:
-* Read 4 digital buttons (UP, DOWN, DRS, Pit Limiter).
-* Read 2 analog inputs (Clutch position, 10-position Rotary Switch).
-* Communicate with the main ECU via CAN bus, sending input states and receiving vehicle data.
-* Display information (Temperatures, Statuses) on a 128x64 monochrome display.
-* Control 2 status LEDs.
-
 
 ## 🧩 Dual BSP Design 
 This repository contains the **firmware** (Target s32k) and the **PC simulator** (host) for an F1 “Steering Wheel” board featuring different drivers for:
